@@ -12,7 +12,7 @@ local PlayerGui = player:WaitForChild("PlayerGui")
 
 local KeyModule = {}
 
-local SERVER\_URL = "http://YOUR\_VPS\_IP:3000"  -- change to your VPS
+local SERVER\_URL = "https://jey-scripts.de"  -- change to your VPS
 
 
 
