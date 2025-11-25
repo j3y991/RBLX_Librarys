@@ -1,3 +1,5 @@
+-- KeyModule.lua (Modern Executor UI - Purple Theme)
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 
@@ -6,163 +8,245 @@ local PlayerGui = player:WaitForChild("PlayerGui")
 
 local KeyModule = {}
 
-local SERVER_URL = "https://jey-scripts.de" 
+local SERVER_URL = "https://jey-scripts.de"
+
+
+---------------------------------------------------------------------
+-- UNIVERSAL EXECUTOR CLIPBOARD
+---------------------------------------------------------------------
+
+local function CopyToClipboard(text)
+if setclipboard then 
+setclipboard(text)
+elseif toclipboard then 
+toclipboard(text)
+elseif setrbxclipboard then
+setrbxclipboard(text)
+else
+warn("Clipboard not supported on this executor")
+end
+end
+
+
+---------------------------------------------------------------------
+-- NOTIFICATION SYSTEM (FADE IN / OUT)
+---------------------------------------------------------------------
+
+local function Notify(message, color)
+local screen = Instance.new("ScreenGui")
+screen.IgnoreGuiInset = true
+screen.Parent = PlayerGui
+screen.Name = "NotificationUI"
+
+local frame = Instance.new("Frame")
+frame.AnchorPoint = Vector2.new(0.5, 0)
+frame.Position = UDim2.new(0.5, 0, 0.1, 0)
+frame.Size = UDim2.new(0, 320, 0, 50)
+frame.BackgroundColor3 = color or Color3.fromRGB(180, 120, 255)
+frame.BorderSizePixel = 0
+frame.BackgroundTransparency = 1
+frame.Parent = screen
+
+local text = Instance.new("TextLabel")
+text.Size = UDim2.new(1, 0, 1, 0)
+text.BackgroundTransparency = 1
+text.TextColor3 = Color3.fromRGB(255, 255, 255)
+text.Font = Enum.Font.GothamBold
+text.TextSize = 20
+text.Text = message
+text.Parent = frame
+
+-- Fade-in
+for i = 1,10 do
+frame.BackgroundTransparency = 1 - (i * 0.1)
+text.TextTransparency = 1 - (i * 0.1)
+task.wait(0.02)
+end
+
+task.wait(2)
+
+-- Fade-out
+for i = 1,10 do
+frame.BackgroundTransparency = i * 0.1
+text.TextTransparency = i * 0.1
+task.wait(0.02)
+end
+
+screen:Destroy()
+end
+
+
+---------------------------------------------------------------------
+-- UI CREATION (EXECUTOR MODERN PURPLE STYLE)
+---------------------------------------------------------------------
 
 local function CreateUI()
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "KeySystemUI"
-    screenGui.ResetOnSpawn = false
-    screenGui.Parent = PlayerGui
+local blur = Instance.new("BlurEffect")
+blur.Size = 0
+blur.Parent = game.Lighting
+
+-- Blur animation
+task.spawn(function()
+for i=0,12 do
+blur.Size = i
+task.wait(0.02)
+end
+end)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "KeySystemUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = PlayerGui
+
 local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0, 400, 0, 200)
-    frame.Position = UDim2.new(0.5, -200, 0.5, -100)
-    frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-    frame.BorderSizePixel = 0
-    frame.Parent = screenGui
+frame.Size = UDim2.new(0, 420, 0, 260)
+frame.Position = UDim2.new(0.5, -210, 0.5, -130)
+frame.BackgroundColor3 = Color3.fromRGB(40, 0, 60)
+frame.BackgroundTransparency = 0.25
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+local uiCorner = Instance.new("UICorner", frame)
+uiCorner.CornerRadius = UDim.new(0, 14)
 
 local title = Instance.new("TextLabel")
-    title.Text = "Roblox Key System"
-    title.Size = UDim2.new(1,0,0,40)
-    title.BackgroundTransparency = 1
-    title.TextColor3 = Color3.fromRGB(255,255,255)
-    title.Font = Enum.Font.SourceSansBold
-    title.TextSize = 24
-    title.Parent = frame
+title.Text = "⚡ Executor Key System"
+title.Size = UDim2.new(1, 0, 0, 40)
+title.BackgroundTransparency = 1
+title.TextColor3 = Color3.fromRGB(230, 210, 255)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 24
+title.Parent = frame
 
 local keyBox = Instance.new("TextBox")
-    keyBox.PlaceholderText = "Enter your key here"
-    keyBox.Size = UDim2.new(0.8,0,0,40)
-    keyBox.Position = UDim2.new(0.1,0,0,60)
-    keyBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
-    keyBox.TextColor3 = Color3.fromRGB(255,255,255)
-    keyBox.ClearTextOnFocus = false
-    keyBox.Parent = frame
+keyBox.PlaceholderText = "Enter your key..."
+keyBox.Size = UDim2.new(0.8, 0, 0, 40)
+keyBox.Position = UDim2.new(0.1, 0, 0.28, 0)
+keyBox.BackgroundColor3 = Color3.fromRGB(70, 0, 120)
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextSize = 18
+keyBox.BorderSizePixel = 0
+keyBox.Parent = frame
+Instance.new("UICorner", keyBox).CornerRadius = UDim.new(0, 10)
 
 local validateBtn = Instance.new("TextButton")
-    validateBtn.Text = "Validate Key"
-    validateBtn.Size = UDim2.new(0.4,0,0,40)
-    validateBtn.Position = UDim2.new(0.1,0,0,110)
-    validateBtn.BackgroundColor3 = Color3.fromRGB(70,150,70)
-    validateBtn.TextColor3 = Color3.fromRGB(255,255,255)
-    validateBtn.Parent = frame
+validateBtn.Text = "Validate Key"
+validateBtn.Size = UDim2.new(0.36, 0, 0, 40)
+validateBtn.Position = UDim2.new(0.1, 0, 0.55, 0)
+validateBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 200)
+validateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+validateBtn.Font = Enum.Font.GothamSemibold
+validateBtn.TextSize = 18
+validateBtn.BorderSizePixel = 0
+validateBtn.Parent = frame
+Instance.new("UICorner", validateBtn).CornerRadius = UDim.new(0, 10)
 
 local claimBtn = Instance.new("TextButton")
-    claimBtn.Text = "Claim Key"
-    claimBtn.Size = UDim2.new(0.4,0,0,40)
-    claimBtn.Position = UDim2.new(0.5,0,0,110)
-    claimBtn.BackgroundColor3 = Color3.fromRGB(70,70,150)
-    claimBtn.TextColor3 = Color3.fromRGB(255,255,255)
-    claimBtn.Parent = frame
+claimBtn.Text = "Claim Key"
+claimBtn.Size = UDim2.new(0.36, 0, 0, 40)
+claimBtn.Position = UDim2.new(0.54, 0, 0.55, 0)
+claimBtn.BackgroundColor3 = Color3.fromRGB(120, 0, 200)
+claimBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+claimBtn.Font = Enum.Font.GothamSemibold
+claimBtn.TextSize = 18
+claimBtn.BorderSizePixel = 0
+claimBtn.Parent = frame
+Instance.new("UICorner", claimBtn).CornerRadius = UDim.new(0, 10)
 
 local openSiteBtn = Instance.new("TextButton")
-    openSiteBtn.Text = "Get Key From Website"
-    openSiteBtn.Size = UDim2.new(0.8,0,0,40)
-    openSiteBtn.Position = UDim2.new(0.1,0,0,160)
-    openSiteBtn.BackgroundColor3 = Color3.fromRGB(150,70,70)
-    openSiteBtn.TextColor3 = Color3.fromRGB(255,255,255)
-    openSiteBtn.Parent = frame
-
-local statusLabel = Instance.new("TextLabel")
-    statusLabel.Size = UDim2.new(1,0,0,20)
-    statusLabel.Position = UDim2.new(0,0,1,-20)
-    statusLabel.BackgroundTransparency = 1
-    statusLabel.TextColor3 = Color3.fromRGB(255,255,255)
-    statusLabel.Font = Enum.Font.SourceSans
-    statusLabel.TextSize = 18
-    statusLabel.Text = ""
-    statusLabel.Parent = frame
+openSiteBtn.Text = "Copy Landing Page URL"
+openSiteBtn.Size = UDim2.new(0.8, 0, 0, 40)
+openSiteBtn.Position = UDim2.new(0.1, 0, 0.78, 0)
+openSiteBtn.BackgroundColor3 = Color3.fromRGB(160, 60, 255)
+openSiteBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+openSiteBtn.Font = Enum.Font.GothamBold
+openSiteBtn.TextSize = 18
+openSiteBtn.BorderSizePixel = 0
+openSiteBtn.Parent = frame
+Instance.new("UICorner", openSiteBtn).CornerRadius = UDim.new(0, 10)
 
 return {
-        KeyBox = keyBox,
-        ValidateBtn = validateBtn,
-        ClaimBtn = claimBtn,
-        OpenSiteBtn = openSiteBtn,
-        Status = statusLabel
-    }
+KeyBox = keyBox,
+ValidateBtn = validateBtn,
+ClaimBtn = claimBtn,
+OpenSiteBtn = openSiteBtn,
+Blur = blur
+}
 end
 
--- Validate key
+
+---------------------------------------------------------------------
+-- SERVER REQUESTS
+---------------------------------------------------------------------
+
 function KeyModule.ValidateKey(key)
-    local success, response = pcall(function()
-        return HttpService:PostAsync(
-            SERVER_URL.."/api/validate",
-            HttpService:JSONEncode({key=key, userId=tostring(player.UserId)}),
-            Enum.HttpContentType.ApplicationJson
-        )
-    end)
+local success, response = pcall(function()
+return HttpService:PostAsync(
+SERVER_URL.."/api/validate",
+HttpService:JSONEncode({key = key, userId = tostring(player.UserId)}),
+Enum.HttpContentType.ApplicationJson
+)
+end)
 
 if success then
-        local data = HttpService:JSONDecode(response)
-        return data.valid
-    else
-        warn("Failed to validate key:", response)
-        return false
-    end
+return HttpService:JSONDecode(response).valid
+end
+return false
 end
 
--- Claim key
 function KeyModule.ClaimKey(key)
-    local success, response = pcall(function()
-        return HttpService:PostAsync(
-            SERVER_URL.."/api/claim",
-            HttpService:JSONEncode({key=key, userId=tostring(player.UserId)}),
-            Enum.HttpContentType.ApplicationJson
-        )
-    end)
+local success, response = pcall(function()
+return HttpService:PostAsync(
+SERVER_URL.."/api/claim",
+HttpService:JSONEncode({key = key, userId = tostring(player.UserId)}),
+Enum.HttpContentType.ApplicationJson
+)
+end)
 
 if success then
-        local data = HttpService:JSONDecode(response)
-        return data.ok
-    else
-        warn("Failed to claim key:", response)
-        return false
-    end
+return HttpService:JSONDecode(response).ok
+end
+return false
 end
 
--- Open landing page
-function KeyModule.OpenLandingPage()
-    local url = SERVER_URL.."/?userId="..tostring(player.UserId)
-    print("Open the website in browser: "..url)
-end
+---------------------------------------------------------------------
+-- UI HANDLERS
+---------------------------------------------------------------------
 
--- Show UI
 function KeyModule.ShowUI()
-    local ui = CreateUI()
+local ui = CreateUI()
 
+-- Copy link
 ui.OpenSiteBtn.MouseButton1Click:Connect(function()
-        KeyModule.OpenLandingPage()
-        ui.Status.Text = "Website opened. Complete 3 checkpoints to get key."
-    end)
+local url = SERVER_URL.."/?userId="..tostring(player.UserId)
+CopyToClipboard(url)
+Notify("URL copied to clipboard!", Color3.fromRGB(170, 80, 255))
+end)
 
+-- Validate
 ui.ValidateBtn.MouseButton1Click:Connect(function()
-        local key = ui.KeyBox.Text
-        if key == "" then
-            ui.Status.Text = "Enter a key first!"
-            return
-        end
+local key = ui.KeyBox.Text
+if key == "" then return Notify("Enter a key first!", Color3.fromRGB(255, 80, 80)) end
 
-local valid = KeyModule.ValidateKey(key)
-        if valid then
-            ui.Status.Text = "Key is valid!"
-        else
-            ui.Status.Text = "Key is invalid or expired."
-        end
-    end)
+if KeyModule.ValidateKey(key) then
+Notify("Key is VALID!", Color3.fromRGB(80, 255, 80))
+else
+Notify("Invalid or expired key!", Color3.fromRGB(255, 80, 80))
+end
+end)
 
+-- Claim
 ui.ClaimBtn.MouseButton1Click:Connect(function()
-        local key = ui.KeyBox.Text
-        if key == "" then
-            ui.Status.Text = "Enter a key first!"
-            return
-        end
+local key = ui.KeyBox.Text
+if key == "" then return Notify("Enter a key first!", Color3.fromRGB(255, 80, 80)) end
 
-local claimed = KeyModule.ClaimKey(key)
-        if claimed then
-            ui.Status.Text = "Key claimed successfully!"
-        else
-            ui.Status.Text = "Failed to claim key."
-        end
-    end)
+if KeyModule.ClaimKey(key) then
+Notify("Key claimed successfully!", Color3.fromRGB(80, 255, 80))
+else
+Notify("Failed to claim key.", Color3.fromRGB(255, 80, 80))
+end
+end)
 end
 
 return KeyModule
