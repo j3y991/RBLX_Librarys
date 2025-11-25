@@ -1,330 +1,172 @@
 -- KeyModule.lua
 
 local HttpService = game:GetService("HttpService")
-
 local Players = game:GetService("Players")
 
 local player = Players.LocalPlayer
-
 local PlayerGui = player:WaitForChild("PlayerGui")
-
-
 
 local KeyModule = {}
 
-local SERVER\_URL = "https://jey-scripts.de"  -- change to your VPS
-
-
+local SERVER_URL = "https://jey-scripts.de"  -- change to your VPS
 
 -- Helper functions
-
 local function CreateUI()
-
-&nbsp;   local screenGui = Instance.new("ScreenGui")
-
-&nbsp;   screenGui.Name = "KeySystemUI"
-
-&nbsp;   screenGui.ResetOnSpawn = false
-
-&nbsp;   screenGui.Parent = PlayerGui
-
-
-
-&nbsp;   local frame = Instance.new("Frame")
-
-&nbsp;   frame.Size = UDim2.new(0, 400, 0, 200)
-
-&nbsp;   frame.Position = UDim2.new(0.5, -200, 0.5, -100)
-
-&nbsp;   frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-
-&nbsp;   frame.BorderSizePixel = 0
-
-&nbsp;   frame.Parent = screenGui
-
-
-
-&nbsp;   local title = Instance.new("TextLabel")
-
-&nbsp;   title.Text = "Roblox Key System"
-
-&nbsp;   title.Size = UDim2.new(1,0,0,40)
-
-&nbsp;   title.BackgroundTransparency = 1
-
-&nbsp;   title.TextColor3 = Color3.fromRGB(255,255,255)
-
-&nbsp;   title.Font = Enum.Font.SourceSansBold
-
-&nbsp;   title.TextSize = 24
-
-&nbsp;   title.Parent = frame
-
-
-
-&nbsp;   local keyBox = Instance.new("TextBox")
-
-&nbsp;   keyBox.PlaceholderText = "Enter your key here"
-
-&nbsp;   keyBox.Size = UDim2.new(0.8,0,0,40)
-
-&nbsp;   keyBox.Position = UDim2.new(0.1,0,0,60)
-
-&nbsp;   keyBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
-
-&nbsp;   keyBox.TextColor3 = Color3.fromRGB(255,255,255)
-
-&nbsp;   keyBox.ClearTextOnFocus = false
-
-&nbsp;   keyBox.Parent = frame
-
-
-
-&nbsp;   local validateBtn = Instance.new("TextButton")
-
-&nbsp;   validateBtn.Text = "Validate Key"
-
-&nbsp;   validateBtn.Size = UDim2.new(0.4,0,0,40)
-
-&nbsp;   validateBtn.Position = UDim2.new(0.1,0,0,110)
-
-&nbsp;   validateBtn.BackgroundColor3 = Color3.fromRGB(70,150,70)
-
-&nbsp;   validateBtn.TextColor3 = Color3.fromRGB(255,255,255)
-
-&nbsp;   validateBtn.Parent = frame
-
-
-
-&nbsp;   local claimBtn = Instance.new("TextButton")
-
-&nbsp;   claimBtn.Text = "Claim Key"
-
-&nbsp;   claimBtn.Size = UDim2.new(0.4,0,0,40)
-
-&nbsp;   claimBtn.Position = UDim2.new(0.5,0,0,110)
-
-&nbsp;   claimBtn.BackgroundColor3 = Color3.fromRGB(70,70,150)
-
-&nbsp;   claimBtn.TextColor3 = Color3.fromRGB(255,255,255)
-
-&nbsp;   claimBtn.Parent = frame
-
-
-
-&nbsp;   local openSiteBtn = Instance.new("TextButton")
-
-&nbsp;   openSiteBtn.Text = "Get Key From Website"
-
-&nbsp;   openSiteBtn.Size = UDim2.new(0.8,0,0,40)
-
-&nbsp;   openSiteBtn.Position = UDim2.new(0.1,0,0,160)
-
-&nbsp;   openSiteBtn.BackgroundColor3 = Color3.fromRGB(150,70,70)
-
-&nbsp;   openSiteBtn.TextColor3 = Color3.fromRGB(255,255,255)
-
-&nbsp;   openSiteBtn.Parent = frame
-
-
-
-&nbsp;   local statusLabel = Instance.new("TextLabel")
-
-&nbsp;   statusLabel.Size = UDim2.new(1,0,0,20)
-
-&nbsp;   statusLabel.Position = UDim2.new(0,0,1,-20)
-
-&nbsp;   statusLabel.BackgroundTransparency = 1
-
-&nbsp;   statusLabel.TextColor3 = Color3.fromRGB(255,255,255)
-
-&nbsp;   statusLabel.Font = Enum.Font.SourceSans
-
-&nbsp;   statusLabel.TextSize = 18
-
-&nbsp;   statusLabel.Text = ""
-
-&nbsp;   statusLabel.Parent = frame
-
-
-
-&nbsp;   return {
-
-&nbsp;       KeyBox = keyBox,
-
-&nbsp;       ValidateBtn = validateBtn,
-
-&nbsp;       ClaimBtn = claimBtn,
-
-&nbsp;       OpenSiteBtn = openSiteBtn,
-
-&nbsp;       Status = statusLabel
-
-&nbsp;   }
-
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "KeySystemUI"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = PlayerGui
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 400, 0, 200)
+    frame.Position = UDim2.new(0.5, -200, 0.5, -100)
+    frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    frame.BorderSizePixel = 0
+    frame.Parent = screenGui
+
+    local title = Instance.new("TextLabel")
+    title.Text = "Roblox Key System"
+    title.Size = UDim2.new(1,0,0,40)
+    title.BackgroundTransparency = 1
+    title.TextColor3 = Color3.fromRGB(255,255,255)
+    title.Font = Enum.Font.SourceSansBold
+    title.TextSize = 24
+    title.Parent = frame
+
+    local keyBox = Instance.new("TextBox")
+    keyBox.PlaceholderText = "Enter your key here"
+    keyBox.Size = UDim2.new(0.8,0,0,40)
+    keyBox.Position = UDim2.new(0.1,0,0,60)
+    keyBox.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    keyBox.TextColor3 = Color3.fromRGB(255,255,255)
+    keyBox.ClearTextOnFocus = false
+    keyBox.Parent = frame
+
+    local validateBtn = Instance.new("TextButton")
+    validateBtn.Text = "Validate Key"
+    validateBtn.Size = UDim2.new(0.4,0,0,40)
+    validateBtn.Position = UDim2.new(0.1,0,0,110)
+    validateBtn.BackgroundColor3 = Color3.fromRGB(70,150,70)
+    validateBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    validateBtn.Parent = frame
+
+    local claimBtn = Instance.new("TextButton")
+    claimBtn.Text = "Claim Key"
+    claimBtn.Size = UDim2.new(0.4,0,0,40)
+    claimBtn.Position = UDim2.new(0.5,0,0,110)
+    claimBtn.BackgroundColor3 = Color3.fromRGB(70,70,150)
+    claimBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    claimBtn.Parent = frame
+
+    local openSiteBtn = Instance.new("TextButton")
+    openSiteBtn.Text = "Get Key From Website"
+    openSiteBtn.Size = UDim2.new(0.8,0,0,40)
+    openSiteBtn.Position = UDim2.new(0.1,0,0,160)
+    openSiteBtn.BackgroundColor3 = Color3.fromRGB(150,70,70)
+    openSiteBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    openSiteBtn.Parent = frame
+
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Size = UDim2.new(1,0,0,20)
+    statusLabel.Position = UDim2.new(0,0,1,-20)
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.TextColor3 = Color3.fromRGB(255,255,255)
+    statusLabel.Font = Enum.Font.SourceSans
+    statusLabel.TextSize = 18
+    statusLabel.Text = ""
+    statusLabel.Parent = frame
+
+    return {
+        KeyBox = keyBox,
+        ValidateBtn = validateBtn,
+        ClaimBtn = claimBtn,
+        OpenSiteBtn = openSiteBtn,
+        Status = statusLabel
+    }
 end
-
-
 
 -- Validate key
-
 function KeyModule.ValidateKey(key)
+    local success, response = pcall(function()
+        return HttpService:PostAsync(
+            SERVER_URL.."/api/validate",
+            HttpService:JSONEncode({key=key, userId=tostring(player.UserId)}),
+            Enum.HttpContentType.ApplicationJson
+        )
+    end)
 
-&nbsp;   local success, response = pcall(function()
-
-&nbsp;       return HttpService:PostAsync(SERVER\_URL.."/api/validate",
-
-&nbsp;           HttpService:JSONEncode({key=key, userId=tostring(player.UserId)}),
-
-&nbsp;           Enum.HttpContentType.ApplicationJson)
-
-&nbsp;   end)
-
-&nbsp;   if success then
-
-&nbsp;       local data = HttpService:JSONDecode(response)
-
-&nbsp;       return data.valid
-
-&nbsp;   else
-
-&nbsp;       warn("Failed to validate key:", response)
-
-&nbsp;       return false
-
-&nbsp;   end
-
+    if success then
+        local data = HttpService:JSONDecode(response)
+        return data.valid
+    else
+        warn("Failed to validate key:", response)
+        return false
+    end
 end
-
-
 
 -- Claim key
-
 function KeyModule.ClaimKey(key)
+    local success, response = pcall(function()
+        return HttpService:PostAsync(
+            SERVER_URL.."/api/claim",
+            HttpService:JSONEncode({key=key, userId=tostring(player.UserId)}),
+            Enum.HttpContentType.ApplicationJson
+        )
+    end)
 
-&nbsp;   local success, response = pcall(function()
-
-&nbsp;       return HttpService:PostAsync(SERVER\_URL.."/api/claim",
-
-&nbsp;           HttpService:JSONEncode({key=key, userId=tostring(player.UserId)}),
-
-&nbsp;           Enum.HttpContentType.ApplicationJson)
-
-&nbsp;   end)
-
-&nbsp;   if success then
-
-&nbsp;       local data = HttpService:JSONDecode(response)
-
-&nbsp;       return data.ok
-
-&nbsp;   else
-
-&nbsp;       warn("Failed to claim key:", response)
-
-&nbsp;       return false
-
-&nbsp;   end
-
+    if success then
+        local data = HttpService:JSONDecode(response)
+        return data.ok
+    else
+        warn("Failed to claim key:", response)
+        return false
+    end
 end
-
-
 
 -- Open landing page
-
 function KeyModule.OpenLandingPage()
-
-&nbsp;   local url = SERVER\_URL.."/?userId="..tostring(player.UserId)
-
-&nbsp;   -- Use Roblox's default browser if possible
-
-&nbsp;   -- In exploits: syn.request({Url = url, Method = "GET"})
-
-&nbsp;   print("Open the website in browser: "..url)
-
+    local url = SERVER_URL.."/?userId="..tostring(player.UserId)
+    print("Open the website in browser: "..url)
 end
-
-
 
 -- Show UI
-
 function KeyModule.ShowUI()
+    local ui = CreateUI()
 
-&nbsp;   local ui = CreateUI()
+    ui.OpenSiteBtn.MouseButton1Click:Connect(function()
+        KeyModule.OpenLandingPage()
+        ui.Status.Text = "Website opened. Complete 3 checkpoints to get key."
+    end)
 
+    ui.ValidateBtn.MouseButton1Click:Connect(function()
+        local key = ui.KeyBox.Text
+        if key == "" then
+            ui.Status.Text = "Enter a key first!"
+            return
+        end
 
+        local valid = KeyModule.ValidateKey(key)
+        if valid then
+            ui.Status.Text = "Key is valid!"
+        else
+            ui.Status.Text = "Key is invalid or expired."
+        end
+    end)
 
-&nbsp;   -- Buttons
+    ui.ClaimBtn.MouseButton1Click:Connect(function()
+        local key = ui.KeyBox.Text
+        if key == "" then
+            ui.Status.Text = "Enter a key first!"
+            return
+        end
 
-&nbsp;   ui.OpenSiteBtn.MouseButton1Click:Connect(function()
-
-&nbsp;       KeyModule.OpenLandingPage()
-
-&nbsp;       ui.Status.Text = "Website opened. Complete 3 checkpoints to get key."
-
-&nbsp;   end)
-
-
-
-&nbsp;   ui.ValidateBtn.MouseButton1Click:Connect(function()
-
-&nbsp;       local key = ui.KeyBox.Text
-
-&nbsp;       if key == "" then
-
-&nbsp;           ui.Status.Text = "Enter a key first!"
-
-&nbsp;           return
-
-&nbsp;       end
-
-&nbsp;       local valid = KeyModule.ValidateKey(key)
-
-&nbsp;       if valid then
-
-&nbsp;           ui.Status.Text = "Key is valid!"
-
-&nbsp;       else
-
-&nbsp;           ui.Status.Text = "Key is invalid or expired."
-
-&nbsp;       end
-
-&nbsp;   end)
-
-
-
-&nbsp;   ui.ClaimBtn.MouseButton1Click:Connect(function()
-
-&nbsp;       local key = ui.KeyBox.Text
-
-&nbsp;       if key == "" then
-
-&nbsp;           ui.Status.Text = "Enter a key first!"
-
-&nbsp;           return
-
-&nbsp;       end
-
-&nbsp;       local claimed = KeyModule.ClaimKey(key)
-
-&nbsp;       if claimed then
-
-&nbsp;           ui.Status.Text = "Key claimed successfully!"
-
-&nbsp;       else
-
-&nbsp;           ui.Status.Text = "Failed to claim key."
-
-&nbsp;       end
-
-&nbsp;   end)
-
+        local claimed = KeyModule.ClaimKey(key)
+        if claimed then
+            ui.Status.Text = "Key claimed successfully!"
+        else
+            ui.Status.Text = "Failed to claim key."
+        end
+    end)
 end
 
-
-
 return KeyModule
-
-
-
