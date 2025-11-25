@@ -1,5 +1,3 @@
--- KeyModule.lua
-
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 
@@ -8,23 +6,21 @@ local PlayerGui = player:WaitForChild("PlayerGui")
 
 local KeyModule = {}
 
-local SERVER_URL = "https://jey-scripts.de"  -- change to your VPS
+local SERVER_URL = "https://jey-scripts.de" 
 
--- Helper functions
 local function CreateUI()
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "KeySystemUI"
     screenGui.ResetOnSpawn = false
     screenGui.Parent = PlayerGui
-
-    local frame = Instance.new("Frame")
+local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0, 400, 0, 200)
     frame.Position = UDim2.new(0.5, -200, 0.5, -100)
     frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
     frame.BorderSizePixel = 0
     frame.Parent = screenGui
 
-    local title = Instance.new("TextLabel")
+local title = Instance.new("TextLabel")
     title.Text = "Roblox Key System"
     title.Size = UDim2.new(1,0,0,40)
     title.BackgroundTransparency = 1
@@ -33,7 +29,7 @@ local function CreateUI()
     title.TextSize = 24
     title.Parent = frame
 
-    local keyBox = Instance.new("TextBox")
+local keyBox = Instance.new("TextBox")
     keyBox.PlaceholderText = "Enter your key here"
     keyBox.Size = UDim2.new(0.8,0,0,40)
     keyBox.Position = UDim2.new(0.1,0,0,60)
@@ -42,7 +38,7 @@ local function CreateUI()
     keyBox.ClearTextOnFocus = false
     keyBox.Parent = frame
 
-    local validateBtn = Instance.new("TextButton")
+local validateBtn = Instance.new("TextButton")
     validateBtn.Text = "Validate Key"
     validateBtn.Size = UDim2.new(0.4,0,0,40)
     validateBtn.Position = UDim2.new(0.1,0,0,110)
@@ -50,7 +46,7 @@ local function CreateUI()
     validateBtn.TextColor3 = Color3.fromRGB(255,255,255)
     validateBtn.Parent = frame
 
-    local claimBtn = Instance.new("TextButton")
+local claimBtn = Instance.new("TextButton")
     claimBtn.Text = "Claim Key"
     claimBtn.Size = UDim2.new(0.4,0,0,40)
     claimBtn.Position = UDim2.new(0.5,0,0,110)
@@ -58,7 +54,7 @@ local function CreateUI()
     claimBtn.TextColor3 = Color3.fromRGB(255,255,255)
     claimBtn.Parent = frame
 
-    local openSiteBtn = Instance.new("TextButton")
+local openSiteBtn = Instance.new("TextButton")
     openSiteBtn.Text = "Get Key From Website"
     openSiteBtn.Size = UDim2.new(0.8,0,0,40)
     openSiteBtn.Position = UDim2.new(0.1,0,0,160)
@@ -66,7 +62,7 @@ local function CreateUI()
     openSiteBtn.TextColor3 = Color3.fromRGB(255,255,255)
     openSiteBtn.Parent = frame
 
-    local statusLabel = Instance.new("TextLabel")
+local statusLabel = Instance.new("TextLabel")
     statusLabel.Size = UDim2.new(1,0,0,20)
     statusLabel.Position = UDim2.new(0,0,1,-20)
     statusLabel.BackgroundTransparency = 1
@@ -76,7 +72,7 @@ local function CreateUI()
     statusLabel.Text = ""
     statusLabel.Parent = frame
 
-    return {
+return {
         KeyBox = keyBox,
         ValidateBtn = validateBtn,
         ClaimBtn = claimBtn,
@@ -95,7 +91,7 @@ function KeyModule.ValidateKey(key)
         )
     end)
 
-    if success then
+if success then
         local data = HttpService:JSONDecode(response)
         return data.valid
     else
@@ -114,7 +110,7 @@ function KeyModule.ClaimKey(key)
         )
     end)
 
-    if success then
+if success then
         local data = HttpService:JSONDecode(response)
         return data.ok
     else
@@ -133,19 +129,19 @@ end
 function KeyModule.ShowUI()
     local ui = CreateUI()
 
-    ui.OpenSiteBtn.MouseButton1Click:Connect(function()
+ui.OpenSiteBtn.MouseButton1Click:Connect(function()
         KeyModule.OpenLandingPage()
         ui.Status.Text = "Website opened. Complete 3 checkpoints to get key."
     end)
 
-    ui.ValidateBtn.MouseButton1Click:Connect(function()
+ui.ValidateBtn.MouseButton1Click:Connect(function()
         local key = ui.KeyBox.Text
         if key == "" then
             ui.Status.Text = "Enter a key first!"
             return
         end
 
-        local valid = KeyModule.ValidateKey(key)
+local valid = KeyModule.ValidateKey(key)
         if valid then
             ui.Status.Text = "Key is valid!"
         else
@@ -153,14 +149,14 @@ function KeyModule.ShowUI()
         end
     end)
 
-    ui.ClaimBtn.MouseButton1Click:Connect(function()
+ui.ClaimBtn.MouseButton1Click:Connect(function()
         local key = ui.KeyBox.Text
         if key == "" then
             ui.Status.Text = "Enter a key first!"
             return
         end
 
-        local claimed = KeyModule.ClaimKey(key)
+local claimed = KeyModule.ClaimKey(key)
         if claimed then
             ui.Status.Text = "Key claimed successfully!"
         else
